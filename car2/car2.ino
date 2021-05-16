@@ -26,14 +26,14 @@ void setup() {
 
 void loop() {
   readIntegerFromBluetooth();
-  shitProtection();
+//  shitProtection();
 
-  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
-  speedPart = charToInt(bluetoothData[3]) * 1000 + charToInt(bluetoothData[4]) * 100 + charToInt(bluetoothData[5]) * 10 + charToInt(bluetoothData[6]);
+//  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
+//  speedPart = charToInt(bluetoothData[3]) * 1000 + charToInt(bluetoothData[4]) * 100 + charToInt(bluetoothData[5]) * 10 + charToInt(bluetoothData[6]);
 
-  route();
+//  route();
   //  Serial.println(bluetoothData);
-  delay(100);
+  delay(5);
   //  Serial.println("end");
 }
 
@@ -118,14 +118,39 @@ void circlePartThree() {
 // Все что связано со считыванием -----------------------------------------------------------------------
 // метод для считывания 7-ми значного числа с блютуза
 // если блюттуз отвалилися - 0 00 0000 - машина должна остановиться
+//void readIntegerFromBluetooth() {
+//  for (int i = 0; i < 7; i++ ) {
+//    if (bluetoothSerial.available()) {
+//      bluetoothData[i] = bluetoothSerial.read();
+//    } else {
+//      // если что то не получилось вычитать - надо остановить машину
+//      putin();
+//    }
+//  }
+//}
+
 void readIntegerFromBluetooth() {
-  for (int i = 0; i < 7; i++ ) {
-    if (bluetoothSerial.available()) {
-      bluetoothData[i] = bluetoothSerial.read();
-    } else {
-      // если что то не получилось вычитать - надо остановить машину
-      putin();
+  if (bluetoothSerial.available()) {
+    int i = 0;
+    int p = 0;
+    
+    int bluetoothDataElement = bluetoothSerial.read();
+
+    while ((bluetoothDataElement != '#') && (p != 100)) {
+      if (bluetoothSerial.available()) {
+        bluetoothData[i] = bluetoothDataElement;
+        Serial.print(bluetoothData[i]);
+        
+        ++i;
+        bluetoothDataElement = bluetoothSerial.read();
+      } else {
+        // защита от вечного цикла
+        ++p;
+      }  
     }
+    Serial.println();
+  } else {
+    putin();      
   }
 }
 
