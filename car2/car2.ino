@@ -18,9 +18,9 @@ int speedLeftMotor = 0;
 int speedRightMotor = 0;
 
 void setup() {
-  Serial.begin(9600); // скорость отправки на комп сообщений (для отладки)
+ // Serial.begin(9600); // скорость отправки на комп сообщений (для отладки)
   bluetoothSerial.begin(9600); // скорость считывания данных с блютуза
-  Serial.println("started");
+  //Serial.println("started");
   putin();
 }
 
@@ -28,12 +28,12 @@ void loop() {
   readIntegerFromBluetooth();
 //  shitProtection();
 
-//  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
-//  speedPart = charToInt(bluetoothData[3]) * 1000 + charToInt(bluetoothData[4]) * 100 + charToInt(bluetoothData[5]) * 10 + charToInt(bluetoothData[6]);
+  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
+  speedPart = charToInt(bluetoothData[3]) * 1000 + charToInt(bluetoothData[4]) * 100 + charToInt(bluetoothData[5]) * 10 + charToInt(bluetoothData[6]);
 
-//  route();
+  route();
   //  Serial.println(bluetoothData);
-  delay(5);
+  delay(100);
   //  Serial.println("end");
 }
 
@@ -67,22 +67,22 @@ void choiceCirclePart() {
     }
   }
   
-  Serial.print("скорость моотора 1 ");
+  //Serial.print("скорость моотора 1 ");
   vivodIntVsosnole(speedLeftMotor);
-  Serial.println("");
+ // Serial.println("");
   motor1.setSpeed(speedLeftMotor);
   
-  Serial.print("скорость моотора 2 ");
+ // Serial.print("скорость моотора 2 ");
   vivodIntVsosnole(speedRightMotor);
-  Serial.println("");
+ // Serial.println("");
   motor2.setSpeed(speedRightMotor);
 }
 
 void circlePartZero() {
   motor1.run(FORWARD);
-  Serial.println("мотор 1 FORWARD");
+//  Serial.println("мотор 1 FORWARD");
   motor2.run(FORWARD);
-  Serial.println("мотор 2 FORWARD");
+ // Serial.println("мотор 2 FORWARD");
 
 
   speedRightMotor = (int)( ((float)routePart / (float)90) * (float)speedRightMotor );
@@ -90,27 +90,27 @@ void circlePartZero() {
 
 void circlePartOne() {
   motor1.run(FORWARD);
-  Serial.println("мотор 1 FORWARD");
+ // Serial.println("мотор 1 FORWARD");
   motor2.run(FORWARD);
-  Serial.println("мотор 2 FORWARD");
+  //Serial.println("мотор 2 FORWARD");
 
   speedLeftMotor = (int)( ((float)(180 - routePart) / (float)90) * (float)speedRightMotor );
 }
 
 void circlePartTwo() {
   motor1.run(BACKWARD);
-  Serial.println("мотор 1 BACKWARD");
+ // Serial.println("мотор 1 BACKWARD");
   motor2.run(BACKWARD);
-  Serial.println("мотор 1 BACKWARD");
+ // Serial.println("мотор 1 BACKWARD");
 
   speedLeftMotor = (int)( ((float)(routePart - 180) / (float)90) * (float)speedRightMotor );
 }
 
 void circlePartThree() {
   motor1.run(BACKWARD);
-  Serial.println("мотор 1 BACKWARD");
+ // Serial.println("мотор 1 BACKWARD");
   motor2.run(BACKWARD);
-  Serial.println("мотор 1 BACKWARD");
+ // Serial.println("мотор 1 BACKWARD");
 
   speedRightMotor = (int)( ((float)(360 - routePart) / (float)90) * (float)speedRightMotor );
 }
@@ -139,7 +139,7 @@ void readIntegerFromBluetooth() {
     while ((bluetoothDataElement != '#') && (p != 100)) {
       if (bluetoothSerial.available()) {
         bluetoothData[i] = bluetoothDataElement;
-        Serial.print(bluetoothData[i]);
+        //Serial.print(bluetoothData[i]);
         
         ++i;
         bluetoothDataElement = bluetoothSerial.read();
@@ -148,7 +148,7 @@ void readIntegerFromBluetooth() {
         ++p;
       }  
     }
-    Serial.println();
+   // Serial.println();
   } else {
     putin();      
   }
@@ -279,5 +279,5 @@ void vivodIntVsosnole (int chisloy) {
   }
 
   char ch  = ciferka + '0';
-  Serial.print(ch);
+ // Serial.print(ch);
 }
