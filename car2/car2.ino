@@ -9,8 +9,9 @@ AF_DCMotor motor2(2); //
 // TX - цифровой вывод 10 (необходимо соединить с выводом RX другого устройства)
 SoftwareSerial bluetoothSerial(9, 10);
 
-char bluetoothData[7] = {}; // полностью считанная стока.
-char shitProtectionBuffer[7] = {}; // Тут будут храниться предыдущие валидные данных, в случае битой цифры будет использоваться соотвествующая отсюда.
+const  int  sizeOfArray = 7;
+char bluetoothData[sizeOfArray] = {}; // полностью считанная стока.
+char shitProtectionBuffer[sizeOfArray] = {}; // Тут будут храниться предыдущие валидные данных, в случае битой цифры будет использоваться соотвествующая отсюда.
 int routePart = 0;
 int speedPart = 0;
 int speedDefoult = 0;
@@ -118,16 +119,6 @@ void circlePartThree() {
 // Все что связано со считыванием -----------------------------------------------------------------------
 // метод для считывания 7-ми значного числа с блютуза
 // если блюттуз отвалилися - 0 00 0000 - машина должна остановиться
-//void readIntegerFromBluetooth() {
-//  for (int i = 0; i < 7; i++ ) {
-//    if (bluetoothSerial.available()) {
-//      bluetoothData[i] = bluetoothSerial.read();
-//    } else {
-//      // если что то не получилось вычитать - надо остановить машину
-//      putin();
-//    }
-//  }
-//}
 
 void readIntegerFromBluetooth() {
   if (bluetoothSerial.available()) {
@@ -135,7 +126,7 @@ void readIntegerFromBluetooth() {
     
     int bluetoothDataElement = bluetoothSerial.read();
 
-    while ((bluetoothDataElement != '#') && (sizeof(bluetoothData)<7)) {
+    while ((bluetoothDataElement != '#') && (sizeof(bluetoothData)<sizeOfArray)) {
       if (bluetoothSerial.available()) {
         bluetoothData[i] = bluetoothDataElement;
         Serial.print(bluetoothData[i]);
@@ -152,7 +143,7 @@ void readIntegerFromBluetooth() {
 
 // ну типо путин - обнуление))0
 void putin() {
-  for (int j = 0; j < 7; j++ ) {
+  for (int j = 0; j < sizeOfArray; j++ ) {
     bluetoothData[j] = '0';
     shitProtectionBuffer[j] = '0';
   }
@@ -253,7 +244,7 @@ void shitProtectionForThree() {
 }
 
 void copyBluetoothDataToshitProtectionBuffer () {
-  for (int j = 0; j < 7; j++ ) {
+  for (int j = 0; j < sizeOfArray; j++ ) {
     shitProtectionBuffer[j] = bluetoothData[j];
   }
 }
