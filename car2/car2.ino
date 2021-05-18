@@ -26,14 +26,14 @@ void setup() {
 
 void loop() {
   readIntegerFromBluetooth();
-//  shitProtection();
+  //  shitProtection();
 
-//  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
-//  speedPart = charToInt(bluetoothData[3]) * 1000 + charToInt(bluetoothData[4]) * 100 + charToInt(bluetoothData[5]) * 10 + charToInt(bluetoothData[6]);
+  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
+  speedPart = charToInt(bluetoothData[3]) * 1000 + charToInt(bluetoothData[4]) * 100 + charToInt(bluetoothData[5]) * 10 + charToInt(bluetoothData[6]);
 
-//  route();
-  //  Serial.println(bluetoothData);
-  delay(5);
+  route();
+  //Serial.println(bluetoothData );
+  //delay(5);
   //  Serial.println("end");
 }
 
@@ -132,20 +132,16 @@ void circlePartThree() {
 void readIntegerFromBluetooth() {
   if (bluetoothSerial.available()) {
     int i = 0;
-    int p = 0;
     
     int bluetoothDataElement = bluetoothSerial.read();
 
-    while ((bluetoothDataElement != '#') && (p != 100)) {
+    while ((bluetoothDataElement != '#') && (sizeof(bluetoothData)<7)) {
       if (bluetoothSerial.available()) {
         bluetoothData[i] = bluetoothDataElement;
         Serial.print(bluetoothData[i]);
         
         ++i;
         bluetoothDataElement = bluetoothSerial.read();
-      } else {
-        // защита от вечного цикла
-        ++p;
       }  
     }
     Serial.println();
