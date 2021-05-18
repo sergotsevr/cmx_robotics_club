@@ -27,15 +27,15 @@ void setup() {
 
 void loop() {
   readIntegerFromBluetooth();
-  //  shitProtection();
-
+ // shitProtection();
+//
   routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
   speedPart = charToInt(bluetoothData[3]) * 1000 + charToInt(bluetoothData[4]) * 100 + charToInt(bluetoothData[5]) * 10 + charToInt(bluetoothData[6]);
 
   route();
-  //Serial.println(bluetoothData );
   //delay(5);
   //  Serial.println("end");
+  putin();
 }
 
 // Управление -------------------------------------------------------------------------------------------
@@ -123,21 +123,23 @@ void circlePartThree() {
 void readIntegerFromBluetooth() {
   if (bluetoothSerial.available()) {
     int i = 0;
-    
+    int p = 0;
     int bluetoothDataElement = bluetoothSerial.read();
 
-    while ((bluetoothDataElement != '#') && (sizeof(bluetoothData)<sizeOfArray)) {
+    while (bluetoothDataElement != '#' && i < sizeOfArray && p<43) {
+      p++;
       if (bluetoothSerial.available()) {
         bluetoothData[i] = bluetoothDataElement;
         Serial.print(bluetoothData[i]);
-        
         ++i;
         bluetoothDataElement = bluetoothSerial.read();
-      }  
+        p=0;
+      } 
     }
     Serial.println();
-  } else {
-    putin();      
+  }
+  else {
+    putin();
   }
 }
 
