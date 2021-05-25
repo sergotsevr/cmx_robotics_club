@@ -22,41 +22,106 @@ int address = 10; // адрес первой ячейки для записи
 void setup() {
   Serial.begin(9600); // скорость отправки на комп сообщений (для отладки)
   bluetoothSerial.begin(9600); // скорость считывания данных с блютуза
-  
+  for (int i=0; i<361; i++){
+    testLeftSin(i);
+    testRightSin(i);
+  }
+  bluetoothData[0]='0';
+  bluetoothData[1]='0';
+  bluetoothData[2]='0';
+  bluetoothData[3]='0';
+  bluetoothData[4]='0';
+  bluetoothData[5]='0';
+  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
+  calcLeftSpeed();
+  calcRightSpeed();
+  Serial.print("speedLeftMotor  ");
+  Serial.println(speedLeftMotor);
+  Serial.print("speedRightMotor  ");
+  Serial.println(speedRightMotor);
+  putin();
   Serial.println("started");
 }
 
 void loop() {
+  boolean stopper = true;
   Serial.print(F("Free RAM = ")); 
   Serial.println(freeMemory(), DEC);  // print how much RAM is available.
   readIntegerFromBluetooth();
+  if(charToInt(bluetoothData[3]) == 0 &&  charToInt(bluetoothData[4])  == 0 && charToInt(bluetoothData[5]) == 0 ){
+    stopper = true;
+  }
+  else{
+    stopper = false;
+  }
   Serial.println(bluetoothData);
   routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
   calcLeftSpeed();
+  calcRightSpeed();
   Serial.print("speedLeftMotor  ");
   Serial.println(speedLeftMotor);
+  Serial.print("speedRightMotor  ");
+  Serial.println(speedRightMotor);
+  route();
   delay(1000);
-  /*
-  readIntegerFromBluetooth();
-
-  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
-  speedPart = 200;
-  route();*/
 }
 
 // Управление -------------------------------------------------------------------------------------------
+void testLeftSin(int s){
+double  param = s;
+double isBack = 1;
+if(s>180){
+  isBack=-1;
+}
+  double result = (sin((param+90)*PI/180)+1)*isBack;
+  Serial.print (s);
+  Serial.print ("     ");
+   Serial.println (result);
+}
+
+void testRightSin(int s){
+double  param = s;
+double isBack = 1;
+if(s>180){
+  isBack=-1;
+}
+  double result = (sin((param-90)*PI/180)+1)*isBack;
+  Serial.print (s);
+  Serial.print ("     ");
+   Serial.println (result);
+}
 
 
 void calcLeftSpeed() {
   Serial.print("routePart  ");
-  Serial.println(routePart);
-  double coef = sin (routePart * PI / 180.0) + 1;
+  Serial.println((int)routePart);
+  double isBack = 1;
+  if(routePart>180){
+    isBack=-1;
+  }
+  double coef = (sin ((routePart-90)*PI/180)+1)*isBack;
   Serial.print("left coef  ");
   Serial.println(coef);
   speedLeftMotor = coef*speedMax;
 }
 
+void calcRightSpeed() {
+  Serial.print("routePart  ");
+  Serial.println((int)routePart);
+  double isBack = 1;
+  if(routePart>180){
+    isBack=-1;
+  }
+  double coef = (sin ((routePart-90)*PI/180)+1)*isBack;
+  Serial.print("right coef  ");
+  Serial.println(coef);
+  speedRightMotor = coef*speedMax;
+}
 
+void route(){
+  motor1.setSpeed(speedLeftMotor);
+  motor2.setSpeed(speedRightMotor);
+}
 
 void readIntegerFromBluetooth2(){
   if (bluetoothSerial.available()) {
