@@ -54,16 +54,18 @@ void loop() {
   else{
     stopper = false;
   }
-  Serial.println(bluetoothData);
-  routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
-  calcLeftSpeed();
-  calcRightSpeed();
-  Serial.print("speedLeftMotor  ");
-  Serial.println(speedLeftMotor);
-  Serial.print("speedRightMotor  ");
-  Serial.println(speedRightMotor);
-  route();
-  delay(1000);
+  if (!stopper){
+   Serial.println(bluetoothData);
+   routePart = charToInt(bluetoothData[0]) * 100 + charToInt(bluetoothData[1]) * 10 + charToInt(bluetoothData[2]);
+   calcLeftSpeed();
+   calcRightSpeed();
+   Serial.print("speedLeftMotor  ");
+   Serial.println(speedLeftMotor);
+   Serial.print("speedRightMotor  ");
+   Serial.println(speedRightMotor);
+   route();
+  }
+  delay(500);
 }
 
 // Управление -------------------------------------------------------------------------------------------
